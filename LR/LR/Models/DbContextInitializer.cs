@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LR.Models
 {
-    public class DbContextInitializer : DropCreateDatabaseIfModelChanges<Db>
+    public class DbContextInitializer : DropCreateDatabaseAlways<Db>
     {
         protected override void Seed(Db context)
         {
@@ -20,6 +20,17 @@ namespace LR.Models
             };
 
             context.Places.AddRange(places);
+
+            var user = new UserModel()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Jonathan Günz",
+                Email = "jonathan.guenz@outlook.com",
+                Place = places.First(),
+                Time = DateTime.Now.AddDays(1)
+            };
+            context.Users.Add(user);
+
             context.SaveChanges();
         }
     }
