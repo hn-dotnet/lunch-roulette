@@ -30,6 +30,7 @@ namespace LR.WebApi
             value.Id = Guid.NewGuid();
 
             db.Places.Add(value);
+            db.SaveChanges();
         }
 
         // PUT api/<controller>/5

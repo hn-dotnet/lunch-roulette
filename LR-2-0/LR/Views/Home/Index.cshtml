@@ -1,0 +1,124 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-6 col-xs-12">
+        <h2>Eintragen</h2>
+        
+        <label>Dein Name</label>
+        <input type="text" class="form-control" id="name"/><br />
+
+        <label>E-Mail</label>
+        <input type="email" class="form-control" id="email"/><br />
+
+        <label>Wann?</label>
+        <div class='input-group date' id='datetimepicker1'>
+            <input type='text' class="form-control" id="time" readonly/>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div><br />
+
+        <label>Anbieter</label>
+        <select class="form-control" id="place">
+            <option>Test</option>
+        </select>
+        <br /><br />
+
+        <button id="btnSend"><i class="glyphicon glyphicon-send"></i> absenden</button>
+    </div>
+    <div class="col-md-6 col-xs-12">
+        <div>
+            <div class="row bg-lightgray">
+                <div class="col-xs-3">Uhrzeit</div>
+                <div class="col-xs-5">Anbieter</div>
+                <div class="col-xs-4">Teilnehmer</div>
+            </div>
+            <div id="anbieter" data-bind="foreach: $data">
+                <div class="row">
+                    <div class="col-xs-3" data-bind="text: moment(Time()).locale('de').format('LT [Uhr]')"></div>
+                    <div class="col-xs-5" data-bind="text: Place.Name()"></div>
+                    <div class="col-xs-4" data-bind="text: Attendees().length"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+        var vm = {};
+
+        var data = [
+            {
+                "Place": {
+                    "Id": "2f6143c0-c4b8-4052-9e6a-c8f7eb60666d",
+                    "Name": "Subway Hauptbahnhof",
+                    "Description": "Kleine SUBWAY-Filiale im Bahnhof Heilbronn",
+                    "Latitute": 49.1426362,
+                    "Longitute": 9.2083295,
+                    "Capacity": 10
+                },
+                "Id": "",
+                "Email": $("#email").val(),
+                "Name": $("#name").val(),
+                "Time": "2015-09-03T23:10:04.9",
+                "Attendees": [
+                    {
+                        "Name": "harmoniemand",
+                        "Email": null,
+                    },
+                    {
+                        "Name": "harmoniemand",
+                        "Email": null,
+                    },
+                    {
+                        "Name": "harmoniemand",
+                        "Email": null,
+                    }   
+                ]
+            },
+            {
+                "Place": {
+                    "Id": "2f6143c0-c4b8-4052-9e6a-c8f7eb60666d",
+                    "Name": "Subway Hauptbahnhof",
+                    "Description": "Kleine SUBWAY-Filiale im Bahnhof Heilbronn",
+                    "Latitute": 49.1426362,
+                    "Longitute": 9.2083295,
+                    "Capacity": 10
+                },
+                "Id": "",
+                "Email": $("#email").val(),
+                "Name": $("#name").val(),
+                "Time": "2015-09-03T23:10:04.9",
+                "Attendees": [
+                    {
+                        "Name": "harmoniemand",
+                        "Email": null,
+                    }
+                ]
+            }
+        ];
+        </script>
+    <script>
+        $(document).ready(function () {
+            $('#datetimepicker1').datetimepicker({
+                    ignoreReadonly: true
+                });
+
+            vm = ko.mapping.fromJS(data);
+            ko.applyBindings(vm, document.getElementById("anbieter"));
+
+            $("#btnSend").click(function () {
+                $.ajax({
+                    method: "POST",
+                    url: "/api/user",
+                    data: data
+                });
+            });
+        });
+    </script>
+    }
