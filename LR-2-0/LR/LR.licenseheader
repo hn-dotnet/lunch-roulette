@@ -1,0 +1,22 @@
+﻿extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+﻿// --------------------------------
+// <copyright file="ActionModel.cs" company="freiesradikal.it">
+//     Copyright (c) Jonathan Günz. The code is published under MIT License.
+// </copyright>
+// <author>Jonathan Günz</author>
+// --------------------------------
+extensions: .aspx .ascx
+<%-- 
+<copyright file="ActionModel.cs" company="freiesradikal.it">
+    Copyright (c) Jonathan Günz. The code is published under MIT License.
+</copyright>
+<author>Jonathan Günz</author>
+--%>
+extensions:  .xml .config .xsd
+<!--
+<copyright file="ActionModel.cs" company="freiesradikal.it">
+    Copyright (c) Jonathan Günz. The code is published under MIT License.
+</copyright>
+<author>Jonathan Günz</author>
+-->

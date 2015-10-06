@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<button id="btn-add"><i class="glyphicon glyphicon-plus"></i> neu</button>
+
+<table class="table hovered dataTable" id="dataTables" data-searching="true">
+    <thead>
+        <tr>
+            <td id="col-name">Name</td>
+            <td id="col-description">Beschreibung</td>
+            <td id="col-capacity">Sitzplätze</td>
+        </tr>
+    </thead>
+
+    <tfoot>
+        <tr>
+            <td>Name</td>
+            <td>Beschreibung</td>
+            <td>Sitzplätze</td>
+        </tr>
+    </tfoot>
+</table>
+
+<div id="overlay" style="display:none; position:fixed; bottom:0px; right:0px;">
+    <div id="overlay-detail" style="display:none;">
+        <label>Name</label>
+        <input type="text" id="detail-name" /><br />
+
+        <label>Beschreibung</label>
+        <input type="text" id="detail-description" />
+        <br />
+        <label>Latitute</label>
+        <input type="text" id="detail-latitute" />
+        <br />
+        <label>Longitute</label>
+        <input type="text" id="detail-longitute" />
+        <br />
+        <label>Kapazität</label>
+        <input type="text" id="detail-capacity" />
+        <br /><br />
+        <button id="detail-save"><i class="glyphicon glyphicon-save"></i> speichern</button>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.extensions.js"></script>
+
+    <script>
+
+
+        $(document).ready(function () {
+            var overlayWidth = $("#dataTables_wrapper").outerWidth(true);
+            overlayWidth = overlayWidth - $("#col-name").outerWidth();
+            overlayWidth = overlayWidth + (($(".body-content").outerWidth(true) - $(".body-content").outerWidth()) / 2);
+
+            $("#overlay").width(overlayWidth);
+            $("#overlay").height($(window).height() - 90);
+
+        });
+        
+        var Place = function (data, dt) {
+            this.Id = data.Id;
+            this.Name = ko.observable(data.Name);
+            this.Description = ko.observable(data.Description);
+            this.Latitute = ko.observable(data.Latitute);
+            this.Longitute = ko.observable(data.Longitute);
+            this.Capacity = ko.observable(data.Capacity);
+
+            // Subscribe a listener to the observable properties for the table
+            // and invalidate the DataTables row when they change so it will redraw
+            var that = this;
+            $.each(['Name', 'Description', 'Capacity'], function (i, prop) {
+                that[prop].subscribe(function (val) {
+                    // Find the row in the DataTable and invalidate it, which will
+                    // cause DataTables to re-read the data
+                    var rowIdx = dt.column(0).data().indexOf(that.id);
+                    dt.row(rowIdx).invalidate();
+                });
+            });
+        };
+
+        var vm = ko.mapping.fromJS([]);
+
+        var dt = $('#dataTables').DataTable({
+            columns: [
+                { data: 'Name' },
+                { data: 'Description' },
+                { data: 'Capacity' },
+            ],
+            ajax: {
+                "url": "/api/place",
+                "dataSrc": ""
+            }
+        });
+
+        $("#btn-add").click(function () {
+            $("#overlay-detail").show();
+            $("#overlay").animate({ width: 'show' }, 500);
+        });
+
+        $("#detail-save").click(function () {
+            var data = {
+                "Id": null,
+                "Name": $("#detail-name").val(),
+                "Description": $("#detail-name").val(),
+                "Latitute": $("#detail-latitute").val(),
+                "Longitute": $("#detail-longitute").val(),
+                "Capacity": $("#detail-capacity").val()
+            };
+
+            dt.rows.add([
+                {
+                    "Name" : $("#detail-name").val(),
+                    "Description" : $("#detail-name").val(),
+                    "Capacity" : $("#detail-capacity").val()
+                }
+            ]).draw(false);
+
+            $.ajax({
+                url: "/api/place",
+                type: "POST",
+                data: data,
+                success: function (result) {
+
+                }
+            });
+        });
+
+    </script>
+}

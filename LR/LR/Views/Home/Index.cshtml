@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        @Html.Partial("_AttendeeAddPartial")
+    </div>
+    <div class="col-md-8">
+        @Html.Partial("_AttendeesPartial", ViewBag.Attendees as List<LR.Models.AttendeeModel>)
+    </div>
+</div>
